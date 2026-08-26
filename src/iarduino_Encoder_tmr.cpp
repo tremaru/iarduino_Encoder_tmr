@@ -67,6 +67,8 @@ int8_t		iarduino_Encoder_tmr::read(void){																	//
 						IETVC.j								|= IETVC.val_BITS[IETVC.i]<<2;						//	Склеиваем прошлое и новое состояние выводов в номер строки таблицы
 						IETVC.val_BITS[IETVC.i]				 = IETVC.j & B00000011;								//	Запоминаем новое состояние выводов энкодера
 						IETVC.val_STEP[IETVC.i]				+= encSTEP(IETVC.j);								//	Прибавляем четверть такта: +1 вправо, -1 влево, 0 если был перескок
+						if(IETVC.val_STEP[IETVC.i] >  120){ IETVC.val_STEP[IETVC.i] =  120; }					//	Не копим больше 30 тактов: если скетч давно не звал read(),
+						if(IETVC.val_STEP[IETVC.i] < -120){ IETVC.val_STEP[IETVC.i] = -120; }					//	лишние такты теряются, но счёт не переворачивается.
 					}																							//
 				}																								//
 }																												//
